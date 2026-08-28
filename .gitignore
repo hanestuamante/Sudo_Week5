@@ -1,0 +1,8 @@
+.DS_Store
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Extracted corpus files (the original RAR archives remain versioned)
+Data/10Topics/Ver1.1/extracted/
