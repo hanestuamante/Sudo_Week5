@@ -4,5 +4,4 @@ __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
 
-# Extracted corpus files (the original RAR archives remain versioned)
-Data/10Topics/Ver1.1/extracted/
+# Dataset gốc và dữ liệu đã giải nén được quản lý trong data/.gitignore.

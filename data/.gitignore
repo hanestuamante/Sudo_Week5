@@ -1,0 +1,7 @@
+# Không commit archive lớn hoặc dữ liệu đã giải nén.
+raw/*
+processed/*
+!raw/.gitkeep
+!processed/.gitkeep
+!.gitignore
+!README.md

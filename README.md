@@ -1,48 +1,84 @@
 # Vietnamese News Text Classification
 
-Phân loại 50.373 bài báo tiếng Việt thuộc 10 chủ đề bằng một mạng neural đơn giản. Pipeline sử dụng TF-IDF và MLP có một hidden layer, được trình bày và chạy hoàn chỉnh trong một notebook duy nhất.
+Phân loại bài báo tiếng Việt thuộc 10 chủ đề bằng TF-IDF và một mạng MLP có
+một hidden layer. Pipeline gồm chuẩn bị corpus VNTC, trích xuất đặc trưng,
+huấn luyện có early stopping và đánh giá trên test set.
 
-## Kết quả chính
+## Kết quả tham khảo
 
 - Test accuracy: **92,30%**
 - Macro F1-score: **90,64%**
 - Weighted F1-score: **92,24%**
 - Epoch được chọn: **9** theo validation loss
 
-Kết quả chi tiết, learning curve, confusion matrix và ví dụ dự đoán sai đã được lưu trong [notebook](notebooks/text_classification.ipynb). Phần phân tích nằm tại [training report](Report/training_report.md).
+Kết quả chi tiết của lần chạy trước nằm trong
+[reports/training_report.md](reports/training_report.md).
 
-## Cấu trúc repo
+## Cấu trúc project
 
 ```text
-VNTC/
-├── Data/                              # Corpus gốc ở định dạng RAR
-├── notebooks/
-│   └── text_classification.ipynb      # Toàn bộ pipeline và output
-├── Report/
-│   ├── training_report.md             # Báo cáo huấn luyện và kết quả
-│   └── ...                            # Tài liệu gốc của corpus
-├── Source/                            # Source gốc đi kèm corpus
-├── requirements.txt
-├── LICENSE
-└── README.md
+.
+├── config/
+│   └── defaults.py                  # Đường dẫn và tham số mặc định
+├── data/
+│   ├── raw/                         # Archive VNTC (không commit)
+│   ├── processed/                   # Dữ liệu giải nén (không commit)
+│   └── README.md                    # Hướng dẫn tải dữ liệu
+├── notebook/
+│   └── text_classification.ipynb    # Notebook bài nộp
+├── src/
+│   ├── corpus.py                    # Giải nén, làm sạch và đọc corpus
+│   ├── features.py                  # Chia validation và tạo TF-IDF
+│   ├── training.py                  # Huấn luyện MLP, early stopping
+│   └── evaluation.py                # Metric và biểu đồ đánh giá
+├── reports/                         # Báo cáo và tài liệu tham khảo
+├── README.md
+└── requirements.txt
 ```
 
-## Chạy lại
+Các file trong `src` được chia theo pipeline cụ thể của bài Week 5, không dựa
+trên một danh sách tên module cố định.
 
-Yêu cầu Python 3.12 và `bsdtar` (có sẵn mặc định trên macOS; trên Linux thường thuộc gói `libarchive-tools`).
+## Yêu cầu
+
+- Python 3.12
+- `bsdtar` để giải nén RAR (`libarchive-tools` trên Ubuntu/Debian)
+- Đủ dung lượng cho khoảng 84.000 file văn bản sau giải nén
+
+## Cài đặt
 
 ```bash
+git clone https://github.com/hanestuamante/Sudo_Week5.git
+cd Sudo_Week5
 python3.12 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
-Mở `notebooks/text_classification.ipynb` bằng VS Code hoặc một giao diện Jupyter, chọn kernel trong `.venv`, rồi chọn **Run All**. Notebook tự giải nén corpus vào `Data/10Topics/Ver1.1/extracted/`; thư mục này đã được bỏ qua bởi Git. Lần chạy đầu cần thêm dung lượng đĩa và thời gian để giải nén 84.132 file.
+Trên Windows, kích hoạt môi trường bằng `.venv\Scripts\activate`.
 
-## Dữ liệu
+## Chuẩn bị dữ liệu
 
-Corpus được dùng trong bài báo:
+Làm theo [data/README.md](data/README.md), sau đó đặt `Train_Full.rar` và
+`Test_Full.rar` vào `data/raw/10Topics/Ver1.1/`.
 
-> Cong Duy Vu Hoang, Dien Dinh, Le Nguyen Nguyen, Quoc Hung Ngo. *A Comparative Study on Vietnamese Text Classification Methods*. Proceedings of IEEE RIVF, 2007.
+## Thực thi
 
-Repo sử dụng phiên bản 10 chủ đề: 33.759 văn bản train và 50.373 văn bản test.
+Từ thư mục gốc của project:
+
+```bash
+jupyter lab notebook/text_classification.ipynb
+```
+
+Chạy lần lượt các cell. Notebook gọi logic từ `src`, còn toàn bộ tham số mặc
+định được quản lý tại `config/defaults.py`. Lần chạy đầu sẽ giải nén corpus vào
+`data/processed/`.
+
+## Nguồn dữ liệu
+
+Corpus được giới thiệu trong bài báo:
+
+> Cong Duy Vu Hoang, Dien Dinh, Le Nguyen Nguyen, Quoc Hung Ngo. *A Comparative
+> Study on Vietnamese Text Classification Methods*. Proceedings of IEEE RIVF,
+> 2007.
